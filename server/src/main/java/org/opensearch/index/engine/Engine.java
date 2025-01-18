@@ -479,6 +479,7 @@ public abstract class Engine implements LifecycleAware, Closeable {
         private final SetOnce<Boolean> freeze = new SetOnce<>();
         private final Mapping requiredMappingUpdate;
         private Translog.Location translogLocation;
+        private InternalEngine.IndexingStrategy indexingStrategy;
         private long took;
 
         protected Result(Operation.TYPE operationType, Exception failure, long version, long term, long seqNo) {
@@ -492,6 +493,10 @@ public abstract class Engine implements LifecycleAware, Closeable {
         }
 
         protected Result(Operation.TYPE operationType, long version, long term, long seqNo) {
+            this(operationType, version, term, seqNo,  null);
+        }
+
+        protected Result(Operation.TYPE operationType, long version, long term, long seqNo, InternalEngine.IndexingStrategy indexingStrategy) {
             this.operationType = operationType;
             this.version = version;
             this.seqNo = seqNo;
@@ -603,6 +608,11 @@ public abstract class Engine implements LifecycleAware, Closeable {
     public static class IndexResult extends Result {
 
         private final boolean created;
+
+        public IndexResult(long version, long term, long seqNo, boolean created, InternalEngine.IndexingStrategy plan) {
+            super(Operation.TYPE.INDEX, version, term, seqNo, plan);
+            this.created = created;
+        }
 
         public IndexResult(long version, long term, long seqNo, boolean created) {
             super(Operation.TYPE.INDEX, version, term, seqNo);

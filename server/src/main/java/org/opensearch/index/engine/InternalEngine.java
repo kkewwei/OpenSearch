@@ -1130,7 +1130,7 @@ public class InternalEngine extends Engine {
                 assert assertDocDoesNotExist(index, canOptimizeAddDocument(index) == false);
                 addDocs(index.docs(), indexWriter);
             }
-            return new IndexResult(plan.versionForIndexing, index.primaryTerm(), index.seqNo(), plan.currentNotFoundOrDeleted);
+            return new IndexResult(plan.versionForIndexing, index.primaryTerm(), index.seqNo(), plan.currentNotFoundOrDeleted, plan);
         } catch (Exception ex) {
             if (ex instanceof AlreadyClosedException == false
                 && indexWriter.getTragicException() == null
