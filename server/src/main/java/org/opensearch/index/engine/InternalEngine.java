@@ -886,10 +886,21 @@ public class InternalEngine extends Engine {
                  *  or calls updateDocument.
                  */
                 final IndexingStrategy plan = indexingStrategyForOperation(index);
-                if (index.origin() == Operation.Origin.PRIMARY) {
-                    reservedDocs = plan.reservedDocs;
-                } else {
+                if (index.origin() == Operation.Origin.REPLICA) {
                     reservedDocs = 0;
+                } else {
+                    reservedDocs = plan.reservedDocs;
+                }
+                if (index.origin() == Operation.Origin.REPLICA && engineConfig.getIndexSettings().isSegRepEnabledOrRemoteNode() == false) {
+                    InternalEngine.IndexingStrategy indexingStrategy = index.indexingStrategy();
+                    if (plan.currentNotFoundOrDeleted != indexingStrategy.currentNotFoundOrDeleted
+                        || plan.useLuceneUpdateDocument != indexingStrategy.useLuceneUpdateDocument
+                        || plan.versionForIndexing != indexingStrategy.versionForIndexing
+                        || plan.indexIntoLucene != indexingStrategy.indexIntoLucene
+                        || plan.addStaleOpToLucene != indexingStrategy.addStaleOpToLucene
+                        || plan.currentNotFoundOrDeleted != indexingStrategy.currentNotFoundOrDeleted) {
+                        throw new RuntimeException("plan != index.indexingStrategy()");
+                    }
                 }
 
                 final IndexResult indexResult;
@@ -1017,6 +1028,9 @@ public class InternalEngine extends Engine {
         } else {
             boolean segRepEnabled = engineConfig.getIndexSettings().isSegRepEnabledOrRemoteNode();
             versionMap.enforceSafeAccess();
+//            if (index.origin() == Operation.Origin.REPLICA && segRepEnabled == false) {
+//
+//            }
             final OpVsLuceneDocStatus opVsLucene = compareOpToLuceneDocBasedOnSeqNo(index);
             if (opVsLucene == OpVsLuceneDocStatus.OP_STALE_OR_EQUAL) {// seqNo小于等于当前已经写入的
                 if (segRepEnabled) {
