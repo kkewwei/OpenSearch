@@ -886,7 +886,11 @@ public class InternalEngine extends Engine {
                  *  or calls updateDocument.
                  */
                 final IndexingStrategy plan = indexingStrategyForOperation(index);
-                reservedDocs = plan.reservedDocs;
+                if (index.origin() == Operation.Origin.PRIMARY) {
+                    reservedDocs = plan.reservedDocs;
+                } else {
+                    reservedDocs = 0;
+                }
 
                 final IndexResult indexResult;
                 if (plan.earlyResultOnPreFlightError.isPresent()) {
