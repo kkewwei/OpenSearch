@@ -49,6 +49,7 @@ import org.opensearch.core.rest.RestStatus;
 import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.core.xcontent.XContentParser;
 import org.opensearch.index.IndexSettings;
+import org.opensearch.index.engine.InternalEngine;
 import org.opensearch.index.mapper.MapperService;
 import org.opensearch.index.seqno.SequenceNumbers;
 
@@ -140,14 +141,20 @@ public abstract class DocWriteResponse extends ReplicationResponse implements Wr
     private final long primaryTerm;
     private boolean forcedRefresh;
     protected final Result result;
+    private final InternalEngine.IndexingStrategy indexingStrategy;
 
     public DocWriteResponse(ShardId shardId, String id, long seqNo, long primaryTerm, long version, Result result) {
+        this(shardId, id, seqNo, primaryTerm, version, result, null);
+    }
+
+    public DocWriteResponse(ShardId shardId, String id, long seqNo, long primaryTerm, long version, Result result, InternalEngine.IndexingStrategy indexingStrategy) {
         this.shardId = Objects.requireNonNull(shardId);
         this.id = Objects.requireNonNull(id);
         this.seqNo = seqNo;
         this.primaryTerm = primaryTerm;
         this.version = version;
         this.result = Objects.requireNonNull(result);
+        this.indexingStrategy = indexingStrategy;
     }
 
     // needed for deserialization
@@ -164,6 +171,7 @@ public abstract class DocWriteResponse extends ReplicationResponse implements Wr
         primaryTerm = in.readVLong();
         forcedRefresh = in.readBoolean();
         result = Result.readFrom(in);
+        indexingStrategy = new InternalEngine.IndexingStrategy(in);
     }
 
     /**
@@ -183,6 +191,7 @@ public abstract class DocWriteResponse extends ReplicationResponse implements Wr
         primaryTerm = in.readVLong();
         forcedRefresh = in.readBoolean();
         result = Result.readFrom(in);
+        indexingStrategy = new InternalEngine.IndexingStrategy(in);
     }
 
     /**
@@ -237,6 +246,9 @@ public abstract class DocWriteResponse extends ReplicationResponse implements Wr
         return primaryTerm;
     }
 
+    public InternalEngine.IndexingStrategy indexingStrategy() {
+        return indexingStrategy;
+    }
     /**
      * Did this request force a refresh? Requests that set {@link WriteRequest#setRefreshPolicy(RefreshPolicy)} to
      * {@link RefreshPolicy#IMMEDIATE} will always return true for this. Requests that set it to {@link RefreshPolicy#WAIT_UNTIL} will
@@ -319,6 +331,7 @@ public abstract class DocWriteResponse extends ReplicationResponse implements Wr
         out.writeVLong(primaryTerm);
         out.writeBoolean(forcedRefresh);
         result.writeTo(out);
+        indexingStrategy.writeTo(out);
     }
 
     @Override

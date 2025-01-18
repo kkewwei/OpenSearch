@@ -504,6 +504,7 @@ public abstract class Engine implements LifecycleAware, Closeable {
             this.failure = null;
             this.requiredMappingUpdate = null;
             this.resultType = Type.SUCCESS;
+            this.indexingStrategy = indexingStrategy;
         }
 
         protected Result(Operation.TYPE operationType, Mapping requiredMappingUpdate) {
@@ -564,6 +565,10 @@ public abstract class Engine implements LifecycleAware, Closeable {
 
         public Operation.TYPE getOperationType() {
             return operationType;
+        }
+
+        public InternalEngine.IndexingStrategy indexingStrategy() {
+            return indexingStrategy;
         }
 
         void setTranslogLocation(Translog.Location translogLocation) {

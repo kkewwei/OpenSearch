@@ -71,6 +71,7 @@ import org.opensearch.action.index.IndexRequest;
 import org.opensearch.common.Booleans;
 import org.opensearch.common.Nullable;
 import org.opensearch.common.SuppressForbidden;
+import org.opensearch.common.annotation.PublicApi;
 import org.opensearch.common.concurrent.GatedCloseable;
 import org.opensearch.common.lease.Releasable;
 import org.opensearch.common.lucene.LoggerInfoStream;
@@ -1213,7 +1214,8 @@ public class InternalEngine extends Engine {
      *
      * @opensearch.internal
      */
-    protected static final class IndexingStrategy implements Writeable {
+    @PublicApi(since = "3.0.0")
+    public static final class IndexingStrategy implements Writeable {
         final boolean currentNotFoundOrDeleted;
         final boolean useLuceneUpdateDocument;
         final long versionForIndexing;
@@ -1222,7 +1224,7 @@ public class InternalEngine extends Engine {
         final int reservedDocs;
         final Optional<IndexResult> earlyResultOnPreFlightError;
 
-        private IndexingStrategy(
+        public IndexingStrategy(
             boolean currentNotFoundOrDeleted,
             boolean useLuceneUpdateDocument,
             boolean indexIntoLucene,
@@ -1251,7 +1253,7 @@ public class InternalEngine extends Engine {
                 : Optional.of(earlyResultOnPreFlightError);
         }
 
-        private IndexingStrategy(StreamInput in) throws IOException {
+        public IndexingStrategy(StreamInput in) throws IOException {
             this.currentNotFoundOrDeleted = in.readBoolean();
             this.useLuceneUpdateDocument = in.readBoolean();
             this.versionForIndexing = in.readVLong();
@@ -1303,7 +1305,12 @@ public class InternalEngine extends Engine {
 
         @Override
         public void writeTo(StreamOutput out) throws IOException {
-
+            out.writeBoolean(currentNotFoundOrDeleted);
+            out.writeBoolean(useLuceneUpdateDocument);
+            out.writeVLong(versionForIndexing);
+            out.writeBoolean(indexIntoLucene);
+            out.writeBoolean(addStaleOpToLucene);
+            out.writeVInt(reservedDocs);
         }
     }
 

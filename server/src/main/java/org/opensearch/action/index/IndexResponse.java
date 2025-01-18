@@ -40,6 +40,7 @@ import org.opensearch.core.index.shard.ShardId;
 import org.opensearch.core.rest.RestStatus;
 import org.opensearch.core.xcontent.MediaTypeRegistry;
 import org.opensearch.core.xcontent.XContentParser;
+import org.opensearch.index.engine.InternalEngine;
 
 import java.io.IOException;
 
@@ -65,11 +66,15 @@ public class IndexResponse extends DocWriteResponse {
     }
 
     public IndexResponse(ShardId shardId, String id, long seqNo, long primaryTerm, long version, boolean created) {
-        this(shardId, id, seqNo, primaryTerm, version, created ? Result.CREATED : Result.UPDATED);
+        this(shardId, id, seqNo, primaryTerm, version, created ? Result.CREATED : Result.UPDATED, null);
     }
 
-    private IndexResponse(ShardId shardId, String id, long seqNo, long primaryTerm, long version, Result result) {
-        super(shardId, id, seqNo, primaryTerm, version, assertCreatedOrUpdated(result));
+    public IndexResponse(ShardId shardId, String id, long seqNo, long primaryTerm, long version, boolean created, InternalEngine.IndexingStrategy indexingStrategy) {
+        this(shardId, id, seqNo, primaryTerm, version, created ? Result.CREATED : Result.UPDATED, indexingStrategy);
+    }
+
+    private IndexResponse(ShardId shardId, String id, long seqNo, long primaryTerm, long version, Result result, InternalEngine.IndexingStrategy indexingStrategy) {
+        super(shardId, id, seqNo, primaryTerm, version, assertCreatedOrUpdated(result), indexingStrategy);
     }
 
     private static Result assertCreatedOrUpdated(Result result) {
@@ -92,6 +97,7 @@ public class IndexResponse extends DocWriteResponse {
         builder.append(",result=").append(getResult().getLowercase());
         builder.append(",seqNo=").append(getSeqNo());
         builder.append(",primaryTerm=").append(getPrimaryTerm());
+        builder.append(",indexingStrategy=" + indexingStrategy());
         builder.append(",shards=").append(Strings.toString(MediaTypeRegistry.JSON, getShardInfo()));
         return builder.append("]").toString();
     }
@@ -124,7 +130,7 @@ public class IndexResponse extends DocWriteResponse {
     public static class Builder extends DocWriteResponse.Builder {
         @Override
         public IndexResponse build() {
-            IndexResponse indexResponse = new IndexResponse(shardId, id, seqNo, primaryTerm, version, result);
+            IndexResponse indexResponse = new IndexResponse(shardId, id, seqNo, primaryTerm, version, result, null);
             indexResponse.setForcedRefresh(forcedRefresh);
             if (shardInfo != null) {
                 indexResponse.setShardInfo(shardInfo);
