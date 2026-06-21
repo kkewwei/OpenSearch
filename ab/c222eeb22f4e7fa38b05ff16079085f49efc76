@@ -1,0 +1,140 @@
+server/src/main/java/org/opensearch/action/search/SearchQueryThenFetchAsyncAction.java
+  s_a4ef57711feaa9::t_bb822c0bb9fa6a 211-213,220-226,228-234,240-241 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a379011ebfb53f0c62a3138","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[211,213]},{"Range":[220,226]},{"Range":[228,234]},{"Range":[240,241]}]}]}
+server/src/main/java/org/opensearch/action/search/TransportNodeSearchAction.java
+  s_a4ef57711feaa9::t_6df54e6bb2fb44 209-211 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a37902debfb53f0c62a313e","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[209,211]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "abc222eeb22f4e7fa38b05ff16079085f49efc76",
+  "prompts": {},
+  "sessions": {
+    "s_a4ef57711feaa9": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a05d992d4a25d584607b4ef",
+        "model": "openrouter-3o__dev"
+      },
+      "human_author": "kkewwei <kkewwei@163.com>"
+    }
+  },
+  "attestation_metadata": {
+    "server/src/main/java/org/opensearch/action/search/SearchQueryThenFetchAsyncAction.java": [
+      {
+        "hash": "s_a4ef57711feaa9::t_bb822c0bb9fa6a",
+        "line_ranges": [
+          {
+            "Range": [
+              211,
+              213
+            ]
+          },
+          {
+            "Range": [
+              220,
+              226
+            ]
+          },
+          {
+            "Range": [
+              228,
+              234
+            ]
+          },
+          {
+            "Range": [
+              240,
+              241
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a379011ebfb53f0c62a3138",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  211,
+                  213
+                ]
+              },
+              {
+                "Range": [
+                  220,
+                  226
+                ]
+              },
+              {
+                "Range": [
+                  228,
+                  234
+                ]
+              },
+              {
+                "Range": [
+                  240,
+                  241
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "server/src/main/java/org/opensearch/action/search/TransportNodeSearchAction.java": [
+      {
+        "hash": "s_a4ef57711feaa9::t_6df54e6bb2fb44",
+        "line_ranges": [
+          {
+            "Range": [
+              209,
+              211
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a37902debfb53f0c62a313e",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  209,
+                  211
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_a4ef57711feaa9": {
+      "tool": "trae",
+      "conversation_id": "6a05d992d4a25d584607b4ef",
+      "session_id": "6a05d992d4a25d584607b4ef",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_a4ef57711feaa9::t_6df54e6bb2fb44": {
+      "tool": "trae",
+      "conversation_id": "6a05d992d4a25d584607b4ef",
+      "session_id": "6a05d992d4a25d584607b4ef",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_a4ef57711feaa9::t_bb822c0bb9fa6a": {
+      "tool": "trae",
+      "conversation_id": "6a05d992d4a25d584607b4ef",
+      "session_id": "6a05d992d4a25d584607b4ef",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
